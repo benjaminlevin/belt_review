@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Books Home</title>
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'books/css/style.css' %}">
+    </head>
+    <body>
+        <a href='/books'>Home</a> |
+        <a href='/logout'>Logout</a>
+        <h1>Add a New Book Title and a Review:</h1>
+        {% for message in messages %}
+            <ul>
+                <li>{{ message }}</li>
+            </ul>
+        {% endfor %}        
+        <form action='/addbr' method='POST'>
+            {% csrf_token %}
+            Book Title: <input type="text" name="title">
+            <br>
+            Author:
+                <select name='author'>
+                {% if book %}
+                    {% for book in book %}
+                        <option value='{{ book.author }}'>{{ book.author }}</option>
+                    {% endfor %}
+                {% endif %}    
+                </select>
+            <br>
+            Or add a new author:<input type="text" name="new_author">
+            <br>
+            Review:
+            <textarea name="review" rows="4" cols="40"></textarea>
+            <br>
+            Rating: 
+            <select name='stars'>
+                <option value='5'>5</option>
+                <option value='4'>4</option>
+                <option value='3'>3</option>
+                <option value='2'>2</option>
+                <option value='1'>1</option>                                                                
+            </select>
+            Stars
+            <br>
+            <input type="submit" value="Add Book and Review">
+        </form>
+         <!-- {% for user in user %}
+        <ul>
+            <ol class='error'>{{ user.first_name }}</ol>
+            <ol class='error'>{{ user.last_name }}</ol>                             
+            <ol class='error'>{{ user.email }}</ol>
+            <ol class='error'>{{ user.password }}</ol>            
+        </ul>
+        {% endfor %}
+        <a href='/deletea'>delete database</a>                      -->
+    </body>
+</html>

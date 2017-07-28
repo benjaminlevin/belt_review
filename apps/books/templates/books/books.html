@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Books Home</title>
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'books/css/style.css' %}">
+    </head>
+    <body>
+        <a href='/add'>Add Book and Review</a> |
+        <a href='/logout'>Logout</a>        
+        <h2>Welcome, {{ request.session.name }}!</h2>
+        <h3>Recent Book Reviews:</h3>
+        {% for review in review %}
+            <a href='/books/{{review.book.id}}'>{{ review.book.title }}</a>
+            <ul>
+                <ol>Rating: {{review.stars}} stars</ol>
+                <ol><a href='/users/{{ review.user.id }}'>{{ review.user.first_name }}</a> says: {{ review.review }}</ol>
+                <br>
+                <ol>Posted on: {{ review.created_at|date }}</ol>
+            </ul>
+        {% endfor %}
+        <h3>Other Books with Reviews:</h3>
+        {% for book in book %}
+        <ul>
+            <ol><a href='/books/{{book.id}}'>{{ book.title }}</a></ol>
+        </ul>
+        {% endfor %}
+        <!-- {% for user in user %}
+        <ul>
+            <ol class='error'>{{ user.first_name }}</ol>
+            <ol class='error'>{{ user.last_name }}</ol>                             
+            <ol class='error'>{{ user.email }}</ol>
+            <ol class='error'>{{ user.password }}</ol>            
+        </ul>
+        {% endfor %} -->
+        <a href='/deletea'>delete database</a>                     
+    </body>
+</html>

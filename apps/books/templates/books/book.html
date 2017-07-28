@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>User Reviews</title>
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'books/css/style.css' %}">
+    </head>
+    <body>
+        <a href='/books'>Home</a> |
+        <a href='/add'>Add Book and Review</a> |
+        <a href='/logout'>Logout</a>
+        {% for book in book %}
+            <h1>{{ book.title }}</h1>
+            <h3>Author: {{ book.author }}</h3>         
+        {% endfor %}
+        <h2>Reviews:</h2>
+        {% for review in review %}
+            <ul>
+                <ol>Rating: {{ review.stars }} stars</ol>
+                <ol><a href='/users/{{ review.user.id }}'>{{ review.user.first_name }}</a> says: {{ review.review }}</ol>
+                <br>
+                <ol>Posted on: {{ review.created_at|date }}</ol>
+                {% if review.user.id == request.session.id %}
+                    <form action='/delete' method='post'>
+                        {% csrf_token %}
+                        <input type='hidden' name='rid' value='{{ review.id }}'>
+                        <ol><input type='submit' value='Delete This Review'></ol>
+                    </form>
+                {% endif %}
+            </ul>
+        {% endfor %}
+        {% for book in book %}
+        <form action='/addr/{{ book.id }}' method='POST'>
+            {% csrf_token %}
+            Add a Review:
+            {% for message in messages %}
+                <ul>
+                    <li>{{ message }}</li>
+                </ul>
+            {% endfor %}            
+            <br>
+            <textarea name="review" rows="4" cols="40"></textarea>
+            <br>
+            Rating: 
+            <select name='stars'>
+                <option value='5'>5</option>
+                <option value='4'>4</option>
+                <option value='3'>3</option>
+                <option value='2'>2</option>
+                <option value='1'>1</option>                                                                
+            </select>
+            Stars
+            <br>
+            <input type="submit" value="Add Review">
+        </form>
+        {% endfor %}              
+    </body>
+</html>

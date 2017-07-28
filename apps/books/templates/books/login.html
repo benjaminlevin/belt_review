@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Welcome</title>
+        {% load staticfiles %}
+        <link rel="stylesheet" href="{% static 'books/css/style.css' %}">
+    </head>
+    <body>
+        <h1>Register</h1>
+        {% for message in messages %}
+            <ul>
+                <li>{{ message }}</li>
+            </ul>
+        {% endfor %}
+        <form action='/register' method='POST'>
+            {% csrf_token %}
+            First Name: <input type="text" name="first_name">
+            Last Name: <input type="text" name="last_name">
+            Email: <input type="text" name="email">
+            Password: <input type="password" name="password">
+            Confirm Password: <input type="password" name="confirm_password">
+            <input type="submit" value="Register">
+        </form>
+        <h1>Login</h1>
+        <form action='/login' method='POST'>    
+            {% csrf_token %}      
+            Email: <input type="text" name="email">
+            Password: <input type="password" name="password">
+            <input type="submit" value="Login">
+        </form>
+         <!-- {% for user in user %}
+        <ul>
+            <ol class='error'>{{ user.first_name }}</ol>
+            <ol class='error'>{{ user.last_name }}</ol>                             
+            <ol class='error'>{{ user.email }}</ol>
+            <ol class='error'>{{ user.password }}</ol>            
+        </ul>
+        {% endfor %} -->                 
+    </body>
+</html>
