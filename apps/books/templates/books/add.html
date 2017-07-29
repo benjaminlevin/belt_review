@@ -20,11 +20,12 @@
             <br>
             Author:
                 <select name='author'>
-                {% if book %}
-                    {% for book in book %}
-                        <option value='{{ book.author }}'>{{ book.author }}</option>
-                    {% endfor %}
-                {% endif %}    
+                    <option value=''></option>
+                    {% if author %}
+                        {% for author in author %}
+                            <option value='{{ author.author }}'>{{ author.author }}</option>
+                        {% endfor %}
+                    {% endif %}    
                 </select>
             <br>
             Or add a new author:<input type="text" name="new_author">

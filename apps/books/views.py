@@ -71,6 +71,7 @@ def add(request):
         "user" : User.objects.all(),
         "review" : Review.objects.annotate().order_by('-created_at')[:3],
         "book" : Book.objects.annotate().order_by('title'),
+        "author" : Book.objects.values('author').distinct()
     }
     return render(request, "books/add.html", context)
 
@@ -78,7 +79,12 @@ def addbr(request):
     if request.method == "POST":
         new_book = Book.objects.addBook(request)
         if new_book[2] is False:
-            return redirect('/add')
+            if len(request.POST['title'])>0 and len(request.POST['new_author'])>0:
+                return redirect('/books/'+str(new_book[3].id))
+            elif len(request.POST['title'])>0 and len(request.POST['author'])>0:
+                return redirect('/books/'+str(new_book[3].id))
+            else:
+                return redirect('/add')
         elif new_book[2] is True:
             user = User.objects.get(id=request.session['id'])
             review = Review.objects.addReview(request, new_book[1], user)

@@ -77,19 +77,46 @@ class User(models.Model):
 class BookManager(models.Manager):
     def addBook(self, request):
         post_data = request.POST
-        if len(post_data['title'])>0 and len(post_data['new_author'])<1 and len(post_data['author'])>0:
-            new_book = Book.objects.create(title=post_data['title'], author=post_data['author'])
-            data_is_good=True 
-            return self, new_book, data_is_good
-        elif len(post_data['title'])>0 and len(post_data['new_author'])>0:
-            new_book = Book.objects.create(title=post_data['title'], author=post_data['new_author'])
-            data_is_good=True
-            return self, new_book, data_is_good                     
-        else:
+        if len(post_data['title'])<1:
+            books = ''
             new_book = ''
-            messages.error(request, "Book title must contain characters and author must be selected")
-            data_is_good=False
-            return self, new_book, data_is_good
+            messages.error(request, "Book title must contain characters")
+            data_is_good = False
+            return self, new_book, data_is_good, books
+        if len(post_data['author']) < 1 and len(post_data['new_author']) < 1:
+            books = ''
+            new_book = ''
+            messages.error(request, "Book must have an author")
+            data_is_good = False
+            return self, new_book, data_is_good, books
+        else:
+            if len(post_data['new_author']) < 1:
+                bookcheck = Book.objects.filter(title=post_data['title'], author=post_data['author'])
+                if len(bookcheck)<1:
+                    books = ''
+                    new_book = Book.objects.create(title=post_data['title'], author=post_data['author'])
+                    data_is_good=True
+                    return self, new_book, data_is_good, books                   
+                else:
+                    print '12'
+                    books = Book.objects.get(title=post_data['title'], author=post_data['author'])
+                    new_book = ''
+                    messages.error(request, "Book already exists, redirected to book page")
+                    data_is_good = False
+                    return self, new_book, data_is_good, books                          
+            else:
+                bookcheck = Book.objects.filter(title=post_data['title'], author=post_data['new_author'])
+                if len(bookcheck)<1:
+                    books = ''
+                    new_book = Book.objects.create(title=post_data['title'], author=post_data['new_author'])
+                    data_is_good=True
+                    return self, new_book, data_is_good, books                     
+                else:
+                    books = Book.objects.get(title=post_data['title'], author=post_data['new_author'])
+                    new_book = ''
+                    messages.error(request, "Book already exists, redirected to book page")
+                    data_is_good = False
+                    return self, new_book, data_is_good, books
 
 class Book(models.Model):
     title = models.CharField(max_length=100)
